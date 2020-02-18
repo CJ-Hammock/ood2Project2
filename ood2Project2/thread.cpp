@@ -34,17 +34,19 @@ void threadEngine(char a)
 	{
 		if (Dcar.engine.engine_solenoid_test_passed == 1 && Dcar.engine.engine_sensor_test_passed == 1)
 			cout << "Engine Passed" << endl;
-	}
-	else
-		cout << "Engine Failed" << endl;
+		else
+			cout << "Engine Failed" << endl;
 
-	if (a == 'c')
+	}
+	else if (a == 'c')
 	{
 		if (car.engine.engine_solenoid_test_passed == 1 && car.engine.engine_sensor_test_passed == 1)
 			cout << "Engine Passed" << endl;
+		else
+			cout << "Engine Failed" << endl;
 	}
 	else
-		cout << "Engine Failed" << endl;
+		cout << "Engine Failed to find" << endl;
 
 }
 
@@ -75,17 +77,18 @@ void threadTrans(char a)
 	{
 		if (Dcar.trans.Solenoid_test_passed == 1 && Dcar.trans.Cruise_control_test_passed == 1 && Dcar.trans.Hydrolic_tests_passed == 1 && Dcar.trans.Speed_sensors_test_passed == 1)
 			cout << "Transmission Passed" << endl;
+		else
+			cout << "Transmission Failed" << endl;
 	}
-	else
-		cout << "Transmission Failed" << endl;
-
-	if (a == 'c')
+	else if (a == 'c')
 	{
 		if (car.trans.Solenoid_test_passed == 1 && car.trans.Cruise_control_test_passed == 1 && car.trans.Hydrolic_tests_passed == 1 && car.trans.Speed_sensors_test_passed == 1)
 			cout << "Transmission Passed" << endl;
+		else
+			cout << "Transmission Failed" << endl;
 	}
 	else
-		cout << "Transmission Failed" << endl;
+		cout << "Transmission Failed to find" << endl;
 
 }
 
@@ -114,17 +117,18 @@ void threadComfort(char a)
 	{
 		if (Dcar.comfort.light_test_passed == 1 && Dcar.comfort.wiper_passed == 1 && Dcar.comfort.air_passed == 1)
 			cout << "Comfort Passed" << endl;
+		else
+			cout << "Comfort Failed" << endl;
 	}
-	else
-		cout << "Comfort Failed" << endl;
-
-	if (a == 'c')
+	else if (a == 'c')
 	{
 		if (car.comfort.light_test_passed == 1 && car.comfort.wiper_passed == 1 && car.comfort.air_passed == 1)
 			cout << "Comfort Passed" << endl;
+		else
+			cout << "Comfort Failed" << endl;
 	}
 	else
-		cout << "Comfort Failed" << endl;
+		cout << "Comfort Failed to find" << endl;
 }
 
 void threadSafety(char a)
@@ -148,17 +152,18 @@ void threadSafety(char a)
 	{
 		if (Dcar.safe.Emergency_test_passed == 1)
 			cout << "Safety Passed" << endl;
+		else
+			cout << "Safety Failed" << endl;
 	}
-	else
-		cout << "Safety Passed" << endl;
-
-	if (a == 'c')
+	else if (a == 'c')
 	{
 		if (car.safe.Emergency_test_passed == 1)
 			cout << "Safety Passed" << endl;
+		else
+			cout << "Safety Failed" << endl;
 	}
 	else
-		cout << "Safety Passed" << endl;
+		cout << "Safety Failed to find" << endl;
 }
 
 void runDieselThreads()
@@ -168,6 +173,11 @@ void runDieselThreads()
 	thread t3(threadComfort, 'd');
 	thread t4(threadSafety, 'd');
 
+	t1.join();
+	t2.join();
+	t3.join();
+	t4.join();
+
 
 }
 void runRegularCarThreads()
@@ -176,6 +186,11 @@ void runRegularCarThreads()
 	thread t2(threadEngine, 'c');
 	thread t3(threadComfort, 'c');
 	thread t4(threadSafety, 'c');
+
+	t1.join();
+	t2.join();
+	t3.join();
+	t4.join();
 }
 
 
@@ -189,6 +204,9 @@ int main()
 	{
 	case 1: runDieselThreads(); break;
 	case 0:  runRegularCarThreads(); break;
+	default: cout << "not recognized command" << endl; break;
 	}
+
+
 	return 0;
 }
