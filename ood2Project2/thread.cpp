@@ -15,14 +15,14 @@ void threadEngine(char a)
 {
 	if (a == 'd')
 	{
-		Dcar.engine.engine_solenoid_test_start = 1;
-		Dcar.engine.engine_sensor_test_start = 1;
+	//	Dcar.engine.engine_solenoid_test_start = 1;
+	//	Dcar.engine.engine_sensor_test_start = 1;
 	}
 
 	if (a == 'c')
 	{
-		car.engine.engine_solenoid_test_start = 1;
-		car.engine.engine_sensor_test_start = 1;
+	//	car.engine.engine_solenoid_test_start = 1;
+	//	car.engine.engine_sensor_test_start = 1;
 	}
 
 	cout << "Starting Engine Test" << endl;
@@ -32,7 +32,7 @@ void threadEngine(char a)
 
 	if (a == 'd')
 	{
-		if (Dcar.engine.engine_solenoid_test_passed == 1 && Dcar.engine.engine_sensor_test_passed == 1)
+		if (Dcar.engine.Solenoid_test() && Dcar.engine.Solenoid_test())
 			cout << "Engine Passed" << endl;
 		else
 			cout << "Engine Failed" << endl;
@@ -40,7 +40,7 @@ void threadEngine(char a)
 	}
 	else if (a == 'c')
 	{
-		if (car.engine.engine_solenoid_test_passed == 1 && car.engine.engine_sensor_test_passed == 1)
+		if (car.engine.Solenoid_test() && car.engine.Solenoid_test())
 			cout << "Engine Passed" << endl;
 		else
 			cout << "Engine Failed" << endl;
@@ -54,18 +54,18 @@ void threadTrans(char a)
 {
 	if (a == 'd')
 	{
-		Dcar.trans.Solenoid_test_start = 1;
-		Dcar.trans.Cruise_control_test_start = 1;
-		Dcar.trans.Hydrolic_tests_start = 1;
-		Dcar.trans.Speed_sensors_test_start = 1;
+	//	Dcar.trans.Solenoid_test_start = 1;
+	//	Dcar.trans.Cruise_control_test_start = 1;
+	//	Dcar.trans.Hydrolic_tests_start = 1;
+	//	Dcar.trans.Speed_sensors_test_start = 1;
 	}
 
 	if (a == 'c')
 	{
-		car.trans.Solenoid_test_start = 1;
-		car.trans.Cruise_control_test_start = 1;
-		car.trans.Hydrolic_tests_start = 1;
-		car.trans.Speed_sensors_test_start = 1;
+	//	car.trans.Solenoid_test_start = 1;
+	//	car.trans.Cruise_control_test_start = 1;
+	//	car.trans.Hydrolic_tests_start = 1;
+	//	car.trans.Speed_sensors_test_start = 1;
 	}
 
 	cout << "Starting Transmission Test" << endl;
@@ -75,14 +75,14 @@ void threadTrans(char a)
 
 	if (a == 'd')
 	{
-		if (Dcar.trans.Solenoid_test_passed == 1 && Dcar.trans.Cruise_control_test_passed == 1 && Dcar.trans.Hydrolic_tests_passed == 1 && Dcar.trans.Speed_sensors_test_passed == 1)
+		if (Dcar.trans.Solenoid_test() && Dcar.trans.Cruise_control_test() && Dcar.trans.Hydrolic_tests() && Dcar.trans.Speed_sensors_test())
 			cout << "Transmission Passed" << endl;
 		else
 			cout << "Transmission Failed" << endl;
 	}
 	else if (a == 'c')
 	{
-		if (car.trans.Solenoid_test_passed == 1 && car.trans.Cruise_control_test_passed == 1 && car.trans.Hydrolic_tests_passed == 1 && car.trans.Speed_sensors_test_passed == 1)
+		if (car.trans.Solenoid_test() && car.trans.Cruise_control_test() && car.trans.Hydrolic_tests() && car.trans.Speed_sensors_test())
 			cout << "Transmission Passed" << endl;
 		else
 			cout << "Transmission Failed" << endl;
@@ -95,17 +95,20 @@ void threadTrans(char a)
 void threadComfort(char a)
 {
 	if (a == 'd')
-	{
+	{/*
 		Dcar.comfort.light_test_start = 1;
 		Dcar.comfort.wiper_test_start = 1;
 		Dcar.comfort.air_test_start = 1;
+		*/
 	}
 
 	if (a == 'c')
 	{
+		/*
 		car.comfort.light_test_start = 1;
 		car.comfort.wiper_test_start = 1;
 		car.comfort.air_test_start = 1;
+		*/
 	}
 
 	cout << "Starting Comfort Test" << endl;
@@ -115,14 +118,14 @@ void threadComfort(char a)
 
 	if (a == 'd')
 	{
-		if (Dcar.comfort.light_test_passed == 1 && Dcar.comfort.wiper_passed == 1 && Dcar.comfort.air_passed == 1)
+		if (Dcar.comfort.Light_test() && Dcar.comfort.Wiper_test() && Dcar.comfort.Wiper_test())
 			cout << "Comfort Passed" << endl;
 		else
 			cout << "Comfort Failed" << endl;
 	}
 	else if (a == 'c')
 	{
-		if (car.comfort.light_test_passed == 1 && car.comfort.wiper_passed == 1 && car.comfort.air_passed == 1)
+		if (car.comfort.Light_test() && car.comfort.Wiper_test() && car.comfort.Wiper_test())
 			cout << "Comfort Passed" << endl;
 		else
 			cout << "Comfort Failed" << endl;
@@ -135,12 +138,12 @@ void threadSafety(char a)
 {
 	if (a == 'd')
 	{
-		Dcar.safe.Emergency_test_start = 1;
+		//Dcar.safe.Emergency_test_start = 1;
 	}
 
 	if (a == 'c')
 	{
-		car.safe.Emergency_test_start = 1;
+		//car.safe.Emergency_test_start = 1;
 	}
 
 	cout << "Starting Safety Test" << endl;
@@ -150,14 +153,14 @@ void threadSafety(char a)
 
 	if (a == 'd')
 	{
-		if (Dcar.safe.Emergency_test_passed == 1)
+		if (Dcar.safe.Emergency_test())
 			cout << "Safety Passed" << endl;
 		else
 			cout << "Safety Failed" << endl;
 	}
 	else if (a == 'c')
 	{
-		if (car.safe.Emergency_test_passed == 1)
+		if (car.safe.Emergency_test())
 			cout << "Safety Passed" << endl;
 		else
 			cout << "Safety Failed" << endl;
