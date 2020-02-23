@@ -116,7 +116,10 @@ void threadComfort(char a)
 	if (a == 'd')
 	{
 		if (Dcar.comfort.light_test_passed == 1 && Dcar.comfort.wiper_passed == 1 && Dcar.comfort.air_passed == 1)
+		{
 			cout << "Comfort Passed" << endl;
+
+		}
 		else
 			cout << "Comfort Failed" << endl;
 	}
@@ -168,6 +171,10 @@ void threadSafety(char a)
 
 void runDieselThreads()
 {
+
+	auto beginD = std::chrono::high_resolution_clock::now();
+
+
 	thread t1(threadTrans, 'd');
 	thread t2(threadEngine, 'd');
 	thread t3(threadComfort, 'd');
@@ -178,10 +185,14 @@ void runDieselThreads()
 	t3.join();
 	t4.join();
 
+	auto endD = std::chrono::high_resolution_clock::now();
+	cout << "time for diesel multi thread: " << chrono::duration_cast<chrono::nanoseconds>(endD - beginD).count()*.000000001 << endl;
 
 }
 void runRegularCarThreads()
 {
+	auto beginR = std::chrono::high_resolution_clock::now();
+
 	thread t1(threadTrans, 'c');
 	thread t2(threadEngine, 'c');
 	thread t3(threadComfort, 'c');
@@ -191,19 +202,63 @@ void runRegularCarThreads()
 	t2.join();
 	t3.join();
 	t4.join();
+
+	auto endR = std::chrono::high_resolution_clock::now();
+	cout << "time for regular multi thread: " << chrono::duration_cast<chrono::nanoseconds>(endR - beginR).count() * .000000001 << endl;
+}
+
+
+void runDieselSingleThread()
+{
+
+	auto beginSD = std::chrono::high_resolution_clock::now();
+
+
+	thread t1(threadTrans, 'd');
+	t1.join();
+	thread t2(threadEngine, 'd');
+	t2.join();
+	thread t3(threadComfort, 'd');
+	t3.join();
+	thread t4(threadSafety, 'd');
+	t4.join();
+
+	auto endSD = std::chrono::high_resolution_clock::now();
+	cout << "time for diesel single thread: " << chrono::duration_cast<chrono::nanoseconds>(endSD - beginSD).count()*.000000001 << endl;
+
+}
+
+
+void runRegularCarSingleThread()
+{
+	auto beginSR = std::chrono::high_resolution_clock::now();
+
+	thread t1(threadTrans, 'c');
+	t1.join();
+	thread t2(threadEngine, 'c');
+	t2.join();
+	thread t3(threadComfort, 'c');
+	t3.join();
+	thread t4(threadSafety, 'c');
+	t4.join();
+
+	auto endSR = std::chrono::high_resolution_clock::now();
+	cout << "time for regular single thread: " << chrono::duration_cast<chrono::nanoseconds>(endSR - beginSR).count() * .000000001 << endl;
 }
 
 
 int main()
 {
 	int choice = 0;
-	cout << "please enter type of car Diesel(1) or Regular(0)" << endl;
+	cout << "please enter type of car Diesel(1), Regular(0), Diesel single thread(2), Regular single thread(3)" << endl;
 	cin >> choice;
 
 	switch (choice)
 	{
 	case 1: runDieselThreads(); break;
 	case 0:  runRegularCarThreads(); break;
+	case 2: runDieselSingleThread(); break;
+	case 3:  runRegularCarSingleThread(); break;
 	default: cout << "not recognized command" << endl; break;
 	}
 
