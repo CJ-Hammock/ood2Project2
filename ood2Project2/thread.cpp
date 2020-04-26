@@ -11,37 +11,88 @@ using namespace std;
 Car car;
 DieselCar Dcar;
 
-void threadEngine(char a)
-{
-	if (a == 'd')
-	{
-	//	Dcar.engine.engine_solenoid_test_start = 1;
-	//	Dcar.engine.engine_sensor_test_start = 1;
-	}
 
-	if (a == 'c')
-	{
-	//	car.engine.engine_solenoid_test_start = 1;
-	//	car.engine.engine_sensor_test_start = 1;
-	}
+//atomic and nonatomic thread calls are labled. they call their atomic / non atomic "shared" functions
+void threadAtomicEngine(char a)
+{
 
 	cout << "Starting Engine Test" << endl;
 	auto start = std::chrono::high_resolution_clock::now();
-	std::this_thread::sleep_for(4s);
+	std::this_thread::sleep_for(1s);
 	auto end = std::chrono::high_resolution_clock::now();
 
 	if (a == 'd')
 	{
-		if (Dcar.engine.Solenoid_test() && Dcar.engine.Solenoid_test())
-			cout << "Engine Passed" << endl;
+		if (Dcar.engine.Solenoid_test() && Dcar.engine.Sensor_test() )
+		{
+			//this nesting makes atleast some of the longer calls run
+			if (Dcar.shared.atomic_electric_test(10) && Dcar.shared.atomic_key_test())
+			{
+					cout << "Engine Passed" << endl;
+			}
+			else
+				cout << "Engine Failed from shared data" << endl;
+		}
 		else
 			cout << "Engine Failed" << endl;
 
 	}
 	else if (a == 'c')
 	{
-		if (car.engine.Solenoid_test() && car.engine.Solenoid_test())
-			cout << "Engine Passed" << endl;
+		if (car.engine.Solenoid_test() && car.engine.Sensor_test())
+		{
+			//this nesting makes atleast some of the longer calls run
+			if (car.shared.atomic_electric_test(10)&& car.shared.atomic_key_test())
+			{
+					cout << "Engine Passed" << endl;
+			}
+			else
+				cout << "Engine Failed from shared data" << endl;
+		}
+		else
+			cout << "Engine Failed" << endl;
+	}
+	else
+		cout << "Engine Failed to find" << endl;
+
+}
+
+void threadEngine(char a)
+{
+
+	cout << "Starting Engine Test" << endl;
+	auto start = std::chrono::high_resolution_clock::now();
+	std::this_thread::sleep_for(1s);
+	auto end = std::chrono::high_resolution_clock::now();
+
+	if (a == 'd')
+	{
+		if (Dcar.engine.Solenoid_test() && Dcar.engine.Sensor_test() )
+		{			
+			//this nesting makes atleast some of the longer calls run
+			if (Dcar.shared.na_key_test()&& Dcar.shared.na_electric_test(10))
+			{
+					cout << "Engine Passed" << endl;
+			}
+			else
+				cout << "Engine Failed from shared data" << endl;
+		}
+		else
+			cout << "Engine Failed" << endl;
+
+	}
+	else if (a == 'c')
+	{
+		if (car.engine.Solenoid_test() && car.engine.Sensor_test())
+		{
+			//this nesting makes atleast some of the longer calls run
+			if (car.shared.na_electric_test(10)&& car.shared.na_key_test())
+			{
+					cout << "Engine Passed" << endl;
+			}
+			else
+				cout << "Engine Failed from shared data" << endl;
+		}
 		else
 			cout << "Engine Failed" << endl;
 	}
@@ -52,25 +103,9 @@ void threadEngine(char a)
 
 void threadTrans(char a)
 {
-	if (a == 'd')
-	{
-	//	Dcar.trans.Solenoid_test_start = 1;
-	//	Dcar.trans.Cruise_control_test_start = 1;
-	//	Dcar.trans.Hydrolic_tests_start = 1;
-	//	Dcar.trans.Speed_sensors_test_start = 1;
-	}
-
-	if (a == 'c')
-	{
-	//	car.trans.Solenoid_test_start = 1;
-	//	car.trans.Cruise_control_test_start = 1;
-	//	car.trans.Hydrolic_tests_start = 1;
-	//	car.trans.Speed_sensors_test_start = 1;
-	}
-
 	cout << "Starting Transmission Test" << endl;
 	auto start = std::chrono::high_resolution_clock::now();
-	std::this_thread::sleep_for(8s);
+	std::this_thread::sleep_for(1s);
 	auto end = std::chrono::high_resolution_clock::now();
 
 	if (a == 'd')
@@ -94,26 +129,10 @@ void threadTrans(char a)
 
 void threadComfort(char a)
 {
-	if (a == 'd')
-	{/*
-		Dcar.comfort.light_test_start = 1;
-		Dcar.comfort.wiper_test_start = 1;
-		Dcar.comfort.air_test_start = 1;
-		*/
-	}
-
-	if (a == 'c')
-	{
-		/*
-		car.comfort.light_test_start = 1;
-		car.comfort.wiper_test_start = 1;
-		car.comfort.air_test_start = 1;
-		*/
-	}
 
 	cout << "Starting Comfort Test" << endl;
 	auto start = std::chrono::high_resolution_clock::now();
-	std::this_thread::sleep_for(2s);
+	std::this_thread::sleep_for(1s);
 	auto end = std::chrono::high_resolution_clock::now();
 
 	if (a == 'd')
@@ -134,34 +153,34 @@ void threadComfort(char a)
 		cout << "Comfort Failed to find" << endl;
 }
 
-void threadSafety(char a)
+void threadAtomicSafety(char a)
 {
-	if (a == 'd')
-	{
-		//Dcar.safe.Emergency_test_start = 1;
-	}
-
-	if (a == 'c')
-	{
-		//car.safe.Emergency_test_start = 1;
-	}
-
 	cout << "Starting Safety Test" << endl;
 	auto start = std::chrono::high_resolution_clock::now();
-	std::this_thread::sleep_for(5s);
+	std::this_thread::sleep_for(1s);
 	auto end = std::chrono::high_resolution_clock::now();
 
 	if (a == 'd')
 	{
 		if (Dcar.safe.Emergency_test())
-			cout << "Safety Passed" << endl;
+		{
+			if (Dcar.shared.na_key_test() && Dcar.shared.na_electric_test(10))
+				cout << "Safety Passed" << endl;
+			else
+				cout << "safety failed from shared data" << endl;
+		}
 		else
 			cout << "Safety Failed" << endl;
 	}
 	else if (a == 'c')
 	{
-		if (car.safe.Emergency_test())
-			cout << "Safety Passed" << endl;
+		if (car.safe.Emergency_test() )
+		{
+			if (car.shared.na_key_test() && car.shared.na_electric_test(10))
+				cout << "Safety Passed" << endl;
+			else
+				cout << "safety failed from shared data" << endl;
+		}
 		else
 			cout << "Safety Failed" << endl;
 	}
@@ -169,8 +188,47 @@ void threadSafety(char a)
 		cout << "Safety Failed to find" << endl;
 }
 
+
+void threadSafety(char a)
+{
+	cout << "Starting Safety Test" << endl;
+	auto start = std::chrono::high_resolution_clock::now();
+	std::this_thread::sleep_for(1s);
+	auto end = std::chrono::high_resolution_clock::now();
+
+	if (a == 'd')
+	{
+		if (Dcar.safe.Emergency_test())
+		{
+			if (Dcar.shared.na_key_test() && Dcar.shared.na_electric_test(10))
+				cout << "Safety Passed" << endl;
+			else
+				cout << "safety failed from shared data" << endl;
+		}
+		else
+			cout << "Safety Failed" << endl;
+	}
+	else if (a == 'c')
+	{
+		if (car.safe.Emergency_test() )
+		{
+			if (car.shared.na_key_test() && car.shared.na_electric_test(10))
+				cout << "Safety Passed" << endl;
+			else
+				cout << "safety failed from shared data" << endl;
+		}
+		else
+			cout << "Safety Failed" << endl;
+	}
+	else
+		cout << "Safety Failed to find" << endl;
+}
+
+
 void runDieselThreads()
 {
+	auto beginSD = std::chrono::high_resolution_clock::now();
+
 	thread t1(threadTrans, 'd');
 	thread t2(threadEngine, 'd');
 	thread t3(threadComfort, 'd');
@@ -181,10 +239,16 @@ void runDieselThreads()
 	t3.join();
 	t4.join();
 
+	auto endSD = std::chrono::high_resolution_clock::now();
+	cout << "time for diesel multi thread: " << chrono::duration_cast<chrono::nanoseconds>(endSD - beginSD).count() * .000000001 << endl;
+
 
 }
+
 void runRegularCarThreads()
 {
+	auto beginSD = std::chrono::high_resolution_clock::now();
+
 	thread t1(threadTrans, 'c');
 	thread t2(threadEngine, 'c');
 	thread t3(threadComfort, 'c');
@@ -194,22 +258,110 @@ void runRegularCarThreads()
 	t2.join();
 	t3.join();
 	t4.join();
+
+
+	auto endSD = std::chrono::high_resolution_clock::now();
+	cout << "time for regular car multi thread: " << chrono::duration_cast<chrono::nanoseconds>(endSD - beginSD).count() * .000000001 << endl;
+
 }
+
+void runAtomicDieselThreads()
+{
+	auto beginSD = std::chrono::high_resolution_clock::now();
+
+	thread t1(threadTrans, 'd');
+	thread t2(threadAtomicEngine, 'd');
+	thread t3(threadComfort, 'd');
+	thread t4(threadAtomicSafety, 'd');
+
+	t1.join();
+	t2.join();
+	t3.join();
+	t4.join();
+
+	auto endSD = std::chrono::high_resolution_clock::now();
+	cout << "time for diesel atomic multi thread: " << chrono::duration_cast<chrono::nanoseconds>(endSD - beginSD).count() * .000000001 << endl;
+
+
+}
+
+void runAtomicRegularCarThreads()
+{
+	auto beginSD = std::chrono::high_resolution_clock::now();
+
+	thread t1(threadTrans, 'c');
+	thread t2(threadAtomicEngine, 'c');
+	thread t3(threadComfort, 'c');
+	thread t4(threadAtomicSafety, 'c');
+
+	t1.join();
+	t2.join();
+	t3.join();
+	t4.join();
+
+
+	auto endSD = std::chrono::high_resolution_clock::now();
+	cout << "time for regular car atomic multi thread: " << chrono::duration_cast<chrono::nanoseconds>(endSD - beginSD).count() * .000000001 << endl;
+
+}
+
+
+void runDieselSingleThread()
+{
+
+	auto beginSD = std::chrono::high_resolution_clock::now();
+
+
+	thread t1(threadTrans, 'd');
+	t1.join();
+	thread t2(threadEngine, 'd');
+	t2.join();
+	thread t3(threadComfort, 'd');
+	t3.join();
+	thread t4(threadSafety, 'd');
+	t4.join();
+
+	auto endSD = std::chrono::high_resolution_clock::now();
+	cout << "time for diesel single thread: " << chrono::duration_cast<chrono::nanoseconds>(endSD - beginSD).count() * .000000001 << endl;
+
+}
+
+
+void runRegularCarSingleThread()
+{
+	auto beginSR = std::chrono::high_resolution_clock::now();
+
+	thread t1(threadTrans, 'c');
+	t1.join();
+	thread t2(threadEngine, 'c');
+	t2.join();
+	thread t3(threadComfort, 'c');
+	t3.join();
+	thread t4(threadSafety, 'c');
+	t4.join();
+
+	auto endSR = std::chrono::high_resolution_clock::now();
+	cout << "time for regular single thread: " << chrono::duration_cast<chrono::nanoseconds>(endSR - beginSR).count() * .000000001 << endl;
+}
+
 
 
 int main()
 {
 	int choice = 0;
-	cout << "please enter type of car Diesel(1) or Regular(0)" << endl;
+	cout << "please enter type of car Diesel(1), Regular(0), Diesel single thread(2), Regular single thread(3),\nAtomic Diesel multi thread(4), Atomic Regular multi thread (5)" << endl;
 	cin >> choice;
 
 	switch (choice)
 	{
 	case 1: runDieselThreads(); break;
 	case 0:  runRegularCarThreads(); break;
+	case 2: runDieselSingleThread(); break;
+	case 3:  runRegularCarSingleThread(); break;
+	case 4: runAtomicDieselThreads(); break;
+	case 5: runAtomicRegularCarThreads(); break;
 	default: cout << "not recognized command" << endl; break;
 	}
-
 
 	return 0;
 }

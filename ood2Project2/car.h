@@ -13,6 +13,7 @@ public:
 	TransmissionElectronics trans;
 	standardComfort comfort;
 	safety safe;
+	sharedSystems shared;
 };
 
 class DieselCar
@@ -22,4 +23,5 @@ public:
 	TransmissionElectronics trans;
 	standardComfort comfort;
 	safety safe;
+	sharedSystems shared;
 };

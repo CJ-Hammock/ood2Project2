@@ -1,5 +1,8 @@
 #include "car_sim.h"
 
+
+//this seperation to a cpp file allows easy change of function calls to simulate anything needed for processing
+
 engine::engine()
 {
 	Mass_Air_Flow_Sensor = 0; //int calculates volume density of intake
@@ -24,11 +27,15 @@ engine::engine()
 
 bool engine::Solenoid_test()
 {
+	//-----------see diesel engine
+
 	return true;
 }
 
 bool engine::Sensor_test()
 {
+	//-------------see diesel engine
+
 	return true;
 }
 
@@ -56,12 +63,61 @@ engineDiesel::engineDiesel()
 
 bool engineDiesel::Solenoid_test()
 {
-
 	return true;
+
+	//random exectution that can be run to simulate processing time
+
+	/*
+	
+	fuel_injector_solenoid = 100;// dummy start
+
+
+	engine_solenoid_test_start = 1;//start of the test
+
+
+
+	for (int i = 50; i > 0; i--)
+	{
+		if (fuel_injector_solenoid <= 115)
+		{
+			fuel_injector_solenoid++;
+		}
+		else
+			fuel_injector_solenoid =94;
+
+		if (fuel_injector_solenoid == 97)//if this is reached, the result will be true
+			break;
+	}
+
+	//if the loop doesn't run enough to reach the break statement 97, the return is false
+	if (fuel_injector_solenoid == 97)
+	{
+		engine_solenoid_test_passed = 1;
+	}
+	else
+		engine_solenoid_test_passed = 0;
+
+
+	if (engine_solenoid_test_passed == 1)
+		return true;
+	else
+		return false;
+
+		*/
+
 }
 
 bool engineDiesel::Sensor_test()
 {
+	Starter_moter = 0; // car is not being cranked
+	Engine_Speed_Sensor = 0; // 0 means engine is off, car not cranked
+
+	//----------------check if car is on and being cranked, return false if it is
+	//-----if on and not cranked, true
+	//-----if off and not cranked and nothing else on, true
+
+
+
 	return true;
 }
 
@@ -100,21 +156,29 @@ TransmissionElectronics::TransmissionElectronics()
 
 bool TransmissionElectronics::Solenoid_test()
 {
+	//----------------pressure control solenoid 1 and 2
+	//-------------shift solenoids
 	return true;
 }
 
 bool TransmissionElectronics::Cruise_control_test()
 {
+
+	//----------cruise control,  and shift lock (make sure not too fast for gear / switch gear
+
 	return true;
 }
 
 bool TransmissionElectronics::Hydrolic_tests()
 {
+	////---------hydrolic, does a wait time
 	return true;
 }
 
 bool TransmissionElectronics::Speed_sensors_test()
 {
+	//---------turbine and vehicle sensors
+
 	return true;
 }
 
@@ -149,6 +213,7 @@ bool standardComfort::Light_test()
 
 bool standardComfort::Wiper_test()
 {
+	//-----------do a thing
 	return true;
 }
 
@@ -173,3 +238,112 @@ bool safety::Emergency_test()
 {
 	return true;
 }
+
+
+//
+
+sharedSystems::sharedSystems()
+{
+	//seperate atomic and non atomic variables
+
+	batteryLevel= 95;//current charge of battery
+	keyPresence = true;//is the key present some functions need the key others don't (airbags vs 
+	alternatorVoltage = 14.3; // voltage given to battery. when running car should be around 14+ lower if everything on
+	
+	NAbatteryLevel = 95;//current charge of battery
+	NAkeyPresence = true;//is the key present some functions need the key others don't (airbags vs 
+	NAalternatorVoltage = 14.3; // voltage given to battery. when running car should be around 14+ lower if everything on
+
+}
+
+//functions either use the atomic or nonatomic variables
+bool sharedSystems::atomic_key_test()
+{
+	//eats some time and makes the key false temporarily
+	if (keyPresence == true)
+	{
+		keyPresence = false;
+		for (int i = 0; i < 100; i + 2)
+			i--;
+		keyPresence = true;
+		return true;
+	}
+	else
+	{
+		//returns false if the key was false at the start
+		return false;
+	}
+
+}
+
+
+bool sharedSystems::atomic_electric_test(int load)//returns if both the battery and alternator are acceptable. load helps determine if correct values.
+{
+	//just some proccess that eventually checks if the value at the end was the same at the begining
+	int L = 0;
+	int store = batteryLevel;
+	double A = 0;
+	for (int i = 0; L < store; i++)
+	{
+		batteryLevel = batteryLevel -1; 
+		L++;
+	}
+	A = alternatorVoltage;
+
+	for (int i = 0; i < 100; i++)
+	{
+		alternatorVoltage = ((alternatorVoltage / 2) + 5);
+	}
+
+	alternatorVoltage = A;
+	if (batteryLevel + L == store)
+		return true;
+	else
+		return false;
+}
+
+
+//non atomic function calls
+
+bool sharedSystems::na_key_test()//returns if key is present
+{
+	if (NAkeyPresence == true)
+	{
+		NAkeyPresence = false;
+		for (int i = 0; i < 50; i + 2)
+			i--;
+		NAkeyPresence = true;
+		return true;
+	}
+	else
+	{
+		return false;//if the other threads are still modifying keypresence
+	}
+
+}
+
+bool sharedSystems::na_electric_test(int load)//returns if both the battery and alternator are acceptable. load helps determine if correct values.
+{
+	//just some proccess
+	int L = 0;
+	int store = NAbatteryLevel;
+	double A = 0;
+	for (int i = 0; L < store; i++)
+	{
+		NAbatteryLevel = NAbatteryLevel - 1;
+		L++;
+	}
+	A = NAalternatorVoltage;
+
+	for (int i = 0; i < 100; i++)
+	{
+		NAalternatorVoltage = ((NAalternatorVoltage / 2) + 5);
+	}
+
+	NAalternatorVoltage = A;
+	if (NAbatteryLevel + L == store)
+		return true;
+	else
+		return false;
+}
+

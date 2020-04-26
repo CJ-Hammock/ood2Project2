@@ -1,5 +1,8 @@
 #pragma once
 #pragma once
+
+#include <atomic>
+
 /*
 *  This is the car_sim.h class that outlines variables found in each system
 *
@@ -146,4 +149,29 @@ private:
 	int     Emergency_break; //int enum 1(on) 0(off) emergency break
 	int     Emergency_test_start; //int enum 1(tested) 0(untested) emergency break
 	int     Emergency_test_passed; //int enum 1(pass) 0(fail) emergency break
+};
+
+
+//========================added in new class that is accessed by all aspects
+//=======all variables should be atomic
+class sharedSystems
+{
+public:
+	sharedSystems();
+	bool atomic_key_test();//returns if key is present
+	bool atomic_electric_test(int load);//returns if both the battery and alternator are acceptable. load helps determine if correct values.
+	bool na_key_test();//returns if key is present
+	bool na_electric_test(int load);//returns if both the battery and alternator are acceptable. load helps determine if correct values.
+
+
+
+private:
+	std ::atomic <double>  batteryLevel;//current charge of battery
+	std ::atomic <bool> keyPresence;//is the key present some functions need the key others don't (airbags vs 
+	std :: atomic <double> alternatorVoltage; // voltage given to battery. when running car should be around 14+ lower if everything on
+
+	double  NAbatteryLevel;//current charge of battery
+	bool NAkeyPresence;//is the key present some functions need the key others don't (airbags vs 
+	double NAalternatorVoltage; // voltage given to battery. when running car should be around 14+ lower if everything on
+
 };
